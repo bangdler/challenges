@@ -33,12 +33,18 @@ const Chart = forwardRef(({ toggleChartOn }, ref) => {
     }
   };
 
+  const getCleanCtx = canvas => {
+    const ctx = canvas.getContext('2d');
+    ctx.reset();
+    return ctx;
+  };
+
   const drawPieChart = () => {
     const canvas = canvasRef.current;
 
     if (canvas) {
-      const ctx = canvas.getContext('2d');
-      ctx.reset();
+      const ctx = getCleanCtx(canvas);
+
       let beginAngle = Math.PI;
       let endAngle = Math.PI;
       const totalScore = scores.reduce((acc, cur) => acc + cur);
@@ -66,8 +72,9 @@ const Chart = forwardRef(({ toggleChartOn }, ref) => {
           endAngle,
         );
         ctx.lineTo(CANVAS_SIZE / 2, CANVAS_SIZE / 2);
-        ctx.stroke();
+        ctx.closePath();
         ctx.fill();
+        ctx.stroke();
 
         beginAngle = endAngle;
       }
@@ -78,16 +85,13 @@ const Chart = forwardRef(({ toggleChartOn }, ref) => {
     const canvas = canvasRef.current;
 
     if (canvas) {
-      const ctx = canvas.getContext('2d');
-
-      ctx.reset();
+      const ctx = getCleanCtx(canvas);
 
       const gap = 14;
       const barWidth =
         (CANVAS_SIZE - (scores.length + 2) * gap) / scores.length;
       const heightRatio = (CANVAS_SIZE / Math.max(...scores)) * 0.9;
 
-      ctx.lineWidth = 1;
       for (let i = 0; i < scores.length; i++) {
         const score = scores[i];
         if (score === 0) {
