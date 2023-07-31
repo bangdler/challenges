@@ -7,15 +7,18 @@ const ScoreInputContainer = forwardRef(({ toggleChartOn }, ref) => {
 
   const names = Object.keys(scoreTable);
 
-  const handleInputChange = e => {
-    const input = e.target.value;
-    if (input === '') {
-      scoreTable[e.target.name] = 0;
+  const handleSubmit = e => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+    const inputScoreTable = Object.fromEntries(formData);
+
+    for (let name in inputScoreTable) {
+      const scoreInput = inputScoreTable[name];
+      scoreTable[name] = +scoreInput;
     }
-    const regexp = new RegExp(/^[0-9]+$/);
-    if (regexp.test(input)) {
-      scoreTable[e.target.name] = +input;
-    }
+
+    toggleChartOn();
   };
 
   useEffect(() => {
@@ -25,7 +28,7 @@ const ScoreInputContainer = forwardRef(({ toggleChartOn }, ref) => {
   }, []);
 
   return (
-    <>
+    <Form onSubmit={handleSubmit}>
       <Wrapper>
         <Column>
           <ColumnTitle>Student</ColumnTitle>
@@ -40,21 +43,24 @@ const ScoreInputContainer = forwardRef(({ toggleChartOn }, ref) => {
           {names.map(name => (
             <Input
               key={name}
-              type={'text'}
+              type={'number'}
               id={name}
               name={name}
-              onChange={handleInputChange}
               placeholder={'fill in the score'}
             />
           ))}
         </Column>
       </Wrapper>
-      <Wrapper>
-        <Button onClick={toggleChartOn}>Make Chart</Button>
-      </Wrapper>
-    </>
+      <Button type={'submit'}>Make Chart</Button>
+    </Form>
   );
 });
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const Wrapper = styled.div`
   display: flex;
@@ -92,6 +98,7 @@ const Input = styled.input`
 const Button = styled.button`
   width: 130px;
   height: 80px;
+  margin: 10px 0;
 `;
 
 export default ScoreInputContainer;
