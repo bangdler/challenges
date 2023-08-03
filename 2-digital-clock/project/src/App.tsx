@@ -28,7 +28,9 @@ function App() {
           {isMode && <Mode>{mode}</Mode>}
         </InnerBox>
         <Wrapper>
-          <div>toggle</div>
+          <Toggle onToggle={() => console.log('ontoggle')}>
+            <Toggle.Switch onTitle={'Timer'} offTitle={'Clock'} />
+          </Toggle>
           <ButtonBox>
             <Button $active={isMode} onClick={() => setIsMode(true)}>
               12
