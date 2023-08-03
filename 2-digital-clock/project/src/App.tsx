@@ -5,40 +5,116 @@ import { useState } from 'react';
 import Flex from '@/components/common/Flex';
 import Toggle from '@/components/common/Toggle';
 import COLORS from '@/constants/colors';
+import useTimer from '@/hooks/useTimer';
+
+const TIMER_MODE = {
+  start: 'start',
+  pause: 'pause',
+  reset: 'reset',
+} as const;
+
+type TTimerMode = (typeof TIMER_MODE)[keyof typeof TIMER_MODE];
 
 function App() {
-  const { mode, hourToString, minToString, modeHourToString } = useClock();
+  const {
+    mode: meridiem,
+    hourToString: clockHour,
+    minToString: clockMin,
+    modeHourToString: clockMeridiumHour,
+  } = useClock({ initialDate: new Date() });
 
-  const timeNums = [...hourToString.split(''), ...minToString.split('')].map(
-    Number,
-  );
+  const {
+    startTimer,
+    pauseTimer,
+    resetTimer,
+    minToString: timerMin,
+    secToString: timerSec,
+  } = useTimer();
 
-  const modeTimeNums = [
-    ...modeHourToString.split(''),
-    ...minToString.split(''),
+  const [isTimer, setIsTimer] = useState(false);
+  const [isMeridiemClock, setIsMeridiemClock] = useState(false);
+  const [timerMode, setTimerMode] = useState<TTimerMode>(TIMER_MODE.pause);
+
+  const clockNums = [...clockHour.split(''), ...clockMin.split('')].map(Number);
+
+  const clockMeridiemNums = [
+    ...clockMeridiumHour.split(''),
+    ...clockMin.split(''),
   ].map(Number);
 
-  const [isMode, setIsMode] = useState(false);
+  const timerNums = [...timerMin.split(''), ...timerSec.split('')].map(Number);
+
+  const renderedNums = isTimer
+    ? timerNums
+    : isMeridiemClock
+    ? clockMeridiemNums
+    : clockNums;
+
+  const handleClickClockBtn = (meridiem: boolean) => () => {
+    if (meridiem) {
+      setIsMeridiemClock(true);
+    } else {
+      setIsMeridiemClock(false);
+    }
+  };
+
+  const handleClickTimerBtn = (mode: TTimerMode) => () => {
+    if (mode === TIMER_MODE.start) {
+      startTimer();
+    } else if (mode === TIMER_MODE.pause) {
+      pauseTimer();
+    } else {
+      resetTimer();
+    }
+    setTimerMode(mode);
+  };
+
+  const clockButtons = (
+    <>
+      <Button $active={isMeridiemClock} onClick={handleClickClockBtn(true)}>
+        12
+      </Button>
+      <Button $active={!isMeridiemClock} onClick={handleClickClockBtn(false)}>
+        24
+      </Button>
+    </>
+  );
+
+  const timerButtons = (
+    <>
+      <Button
+        $active={timerMode === TIMER_MODE.start}
+        onClick={handleClickTimerBtn(TIMER_MODE.start)}
+      >
+        start
+      </Button>
+      <Button
+        $active={timerMode === TIMER_MODE.pause}
+        onClick={handleClickTimerBtn(TIMER_MODE.pause)}
+      >
+        pause
+      </Button>
+      <Button
+        $active={timerMode === TIMER_MODE.reset}
+        onClick={handleClickTimerBtn(TIMER_MODE.reset)}
+      >
+        reset
+      </Button>
+    </>
+  );
 
   return (
     <Layout>
       <OuterBox $column $justifyCenter $alignCenter>
         <InnerBox $justifyCenter $alignCenter>
-          <FourDigitClock fourNum={isMode ? modeTimeNums : timeNums} />
-          {isMode && <Mode>{mode}</Mode>}
+          <FourDigitClock fourNum={renderedNums} />
+          {isMeridiemClock && <Mode>{meridiem}</Mode>}
         </InnerBox>
         <Wrapper>
-          <Toggle onToggle={() => console.log('ontoggle')}>
+          <Toggle onToggle={() => setIsTimer(prev => !prev)}>
             <Toggle.Switch onTitle={'Timer'} offTitle={'Clock'} />
           </Toggle>
-          <ButtonBox>
-            <Button $active={isMode} onClick={() => setIsMode(true)}>
-              12
-            </Button>
-            <Button $active={!isMode} onClick={() => setIsMode(false)}>
-              24
-            </Button>
-          </ButtonBox>
+          <ButtonBox>{isTimer ? timerButtons : clockButtons}</ButtonBox>
         </Wrapper>
       </OuterBox>
     </Layout>
@@ -86,16 +162,14 @@ const Wrapper = styled(Flex)`
 `;
 
 const ButtonBox = styled(Box)`
-  width: 120px;
-  height: 60px;
   padding: 2px;
-  gap: 2px;
+  gap: 5px;
   background-color: ${COLORS.white};
 `;
 
 const Button = styled.button<{ $active: boolean }>`
-  width: 50%;
-  height: 100%;
+  width: 60px;
+  height: 60px;
   border-radius: 14px;
   background-color: ${COLORS.gray};
   &:hover {
