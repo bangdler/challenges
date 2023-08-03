@@ -1,17 +1,17 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 
+const TIMER_MAX = 60 * 60;
+
 const useTimer = () => {
   const [timer, setTimer] = useState(0);
   const timerRef = useRef<NodeJS.Timer>();
-
-  const max = 60 * 60;
 
   const startTimer = useCallback(() => {
     if (!timerRef.current) {
       timerRef.current = setInterval(() => {
         setTimer(prev => {
           const next = prev + 1;
-          if (next === max) {
+          if (next === TIMER_MAX) {
             return 0;
           }
           return next;

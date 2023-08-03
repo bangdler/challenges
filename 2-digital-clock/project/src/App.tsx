@@ -108,7 +108,7 @@ function App() {
       <OuterBox $column $justifyCenter $alignCenter>
         <InnerBox $justifyCenter $alignCenter>
           <FourDigitClock fourNum={renderedNums} />
-          {isMeridiemClock && <Mode>{meridiem}</Mode>}
+          {!isTimer && isMeridiemClock && <Mode>{meridiem}</Mode>}
         </InnerBox>
         <Wrapper>
           <Toggle onToggle={() => setIsTimer(prev => !prev)}>
