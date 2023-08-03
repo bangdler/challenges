@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import SevenSegment from '@/components/SevenSegment';
+import COLORS from '@/constants/colors';
 
 interface IProps {
   fourNum: [number, number, number, number];
@@ -39,14 +40,14 @@ const Wrapper = styled.div`
 const Dot = styled.div`
   width: 10px;
   height: 10px;
-  background-color: lightgray;
+  background-color: ${COLORS.gray};
   animation: dot-flashing 1s infinite alternate;
   @keyframes dot-flashing {
     0% {
-      background-color: lightgray;
+      background-color: ${COLORS.gray};
     }
     100% {
-      background-color: orangered;
+      background-color: ${COLORS.red};
     }
 `;
 

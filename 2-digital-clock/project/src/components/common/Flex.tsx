@@ -1,19 +1,19 @@
 import styled, { css } from 'styled-components';
 
 const Flex = styled.div<{
-  column?: boolean;
-  justifyCenter?: boolean;
-  alignCenter?: boolean;
+  $column?: boolean;
+  $justifyCenter?: boolean;
+  $alignCenter?: boolean;
 }>`
   display: flex;
-  ${props => css`
-    ${props.column && {
+  ${({ $column, $justifyCenter, $alignCenter }) => css`
+    ${$column && {
       flexDirection: 'column',
     }}
-    ${props.justifyCenter && {
+    ${$justifyCenter && {
       justifyContent: 'center',
     }}
-    ${props.alignCenter && {
+    ${$alignCenter && {
       alignItems: 'center',
     }}
   `}

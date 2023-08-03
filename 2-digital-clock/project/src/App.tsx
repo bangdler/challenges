@@ -3,6 +3,8 @@ import FourDigitClock from '@/components/FourDigitClock';
 import useClock from '@/hooks/useClock';
 import { useState } from 'react';
 import Flex from '@/components/common/Flex';
+import Toggle from '@/components/common/Toggle';
+import COLORS from '@/constants/colors';
 
 function App() {
   const { mode, hourToString, minToString, modeHourToString } = useClock();
@@ -20,8 +22,8 @@ function App() {
 
   return (
     <Layout>
-      <OuterBox column justifyCenter alignCenter>
-        <InnerBox justifyCenter alignCenter>
+      <OuterBox $column $justifyCenter $alignCenter>
+        <InnerBox $justifyCenter $alignCenter>
           <FourDigitClock fourNum={isMode ? modeTimeNums : timeNums} />
           {isMode && <Mode>{mode}</Mode>}
         </InnerBox>
@@ -43,11 +45,11 @@ function App() {
 
 const Layout = styled.div`
   height: 100vh;
-  border: 1px solid black;
+  border: 1px solid ${COLORS.black};
 `;
 
 const Box = styled(Flex)`
-  border: 1px solid black;
+  border: 1px solid ${COLORS.black};
   border-radius: 14px;
 `;
 
@@ -57,12 +59,14 @@ const OuterBox = styled(Box)`
   width: 650px;
   height: 420px;
   gap: 30px;
+  background-color: ${COLORS.blue};
 `;
 
 const InnerBox = styled(Box)`
   position: relative;
   width: 480px;
   height: 220px;
+  background-color: ${COLORS.white};
 `;
 
 const Mode = styled.p`
@@ -70,31 +74,37 @@ const Mode = styled.p`
   right: 14px;
   bottom: 30px;
   font-size: 3rem;
-  color: orangered;
+  color: ${COLORS.red};
 `;
 
 const Wrapper = styled(Flex)`
   width: 480px;
   justify-content: space-between;
+  align-items: center;
 `;
 
 const ButtonBox = styled(Box)`
+  width: 120px;
+  height: 60px;
   padding: 2px;
   gap: 2px;
+  background-color: ${COLORS.white};
 `;
 
 const Button = styled.button<{ $active: boolean }>`
-  width: 50px;
-  height: 50px;
+  width: 50%;
+  height: 100%;
   border-radius: 14px;
-  background-color: gainsboro;
+  background-color: ${COLORS.gray};
   &:hover {
-    background-color: palegoldenrod;
+    background-color: ${COLORS.darkGray};
+    color: ${COLORS.white};
   }
   ${({ $active }) => {
     if ($active) {
       return css`
-        background-color: palegoldenrod;
+        background-color: ${COLORS.darkGray};
+        color: ${COLORS.white};
       `;
     }
   }}

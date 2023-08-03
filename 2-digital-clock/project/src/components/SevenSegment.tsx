@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import COLORS from '@/constants/colors';
 
 interface IProps {
   num: number;
@@ -41,11 +42,11 @@ const Segment = styled.div<{ $on: boolean; $vertical?: boolean }>`
   ${({ $on }) => {
     if ($on) {
       return css`
-        background-color: orangered;
+        background-color: ${COLORS.red};
       `;
     }
     return css`
-      background-color: lightgray;
+      background-color: ${COLORS.gray};
       opacity: 0.3;
     `;
   }}
