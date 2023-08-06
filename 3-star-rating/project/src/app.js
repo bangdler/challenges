@@ -36,7 +36,7 @@ function App($target) {
     this.$starBox.replaceWith($newStarBox);
     this.$starBox = $newStarBox;
 
-    this.$rate.innerText = this.state.rate.toFixed(1);
+    this.$rate.innerText = this.state.rate;
 
     if (!this.state.edit) {
       const descriptionIdx = Math.floor(this.state.rate);
@@ -58,7 +58,7 @@ function App($target) {
       new Star(this.$starBox, this.state, this.setState, i, i + 1);
     }
 
-    this.$rate.innerText = this.state.rate.toFixed(1);
+    this.$rate.innerText = this.state.rate;
 
     const descriptionIdx = Math.floor(this.state.rate);
     this.$description.innerText = DESCRIPTIONS[descriptionIdx];
@@ -94,7 +94,7 @@ function App($target) {
 
       $curStar.style.background = `linear-gradient(to right, lime ${percent}%, white ${percent}%)`;
 
-      const rate = min + percent / 100;
+      const rate = (min + percent / 100).toFixed(1);
       const newState = {
         ...this.state,
         rate,
