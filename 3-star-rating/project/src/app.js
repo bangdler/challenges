@@ -32,9 +32,9 @@ function App($target) {
     for (let i = 0; i < 5; i++) {
       new Star($newStarBox, this.state, this.setState, i, i + 1);
     }
-    this.$starBox.remove();
-    this.$rate.insertAdjacentElement("beforebegin", $newStarBox);
+    this.$starBox.replaceWith($newStarBox);
     this.$starBox = $newStarBox;
+
     this.$rate.innerText = this.state.rate.toFixed(1);
 
     if (!this.state.edit) {
