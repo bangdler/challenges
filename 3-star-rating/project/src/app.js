@@ -15,6 +15,7 @@ function App($target) {
   this.$starBox = document.createElement("div");
   this.$rate = document.createElement("p");
   this.$description = document.createElement("p");
+  this.throttle = false;
 
   this.state = {
     rate: 0,
@@ -73,8 +74,39 @@ function App($target) {
     this.setState(newState);
   };
 
+  this.handleMousemove = (e) => {
+    if (this.throttle) return;
+    this.throttle = true;
+    setTimeout(() => {
+      this.throttle = false;
+      if (!this.state.edit) {
+        return;
+      }
+      const $curStarWrapper = e.target.closest(".starWrapper");
+      if (!$curStarWrapper) return;
+
+      const $curStar = $curStarWrapper.querySelector(".star");
+      const min = +$curStarWrapper.dataset.min;
+      const percent =
+        e.offsetX < 0
+          ? 0
+          : Math.floor((e.offsetX / $curStarWrapper.clientWidth) * 100);
+
+      $curStar.style.background = `linear-gradient(to right, lime ${percent}%, white ${percent}%)`;
+
+      const rate = min + percent / 100;
+      const newState = {
+        ...this.state,
+        rate,
+      };
+
+      this.setState(newState);
+    }, 16);
+  };
+
   this.setEvent = () => {
     $target.addEventListener("click", this.handleClick);
+    $target.addEventListener("mousemove", this.handleMousemove);
   };
 
   this.render();

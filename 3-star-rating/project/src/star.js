@@ -13,6 +13,8 @@ function Star($target, state, setState, min, max) {
     $starWrapper.appendChild($starBorder);
     $target.appendChild($starWrapper);
 
+    $starWrapper.dataset.min = min;
+
     let percent;
     if (min >= curRate) {
       percent = 0;
@@ -41,12 +43,7 @@ function Star($target, state, setState, min, max) {
     }
   };
 
-  this.setEvent = () => {
-    $starWrapper.addEventListener("mousemove", this.handleMousemove);
-  };
-
   this.render();
-  this.setEvent();
 }
 
 export default Star;
