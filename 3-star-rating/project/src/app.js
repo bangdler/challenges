@@ -9,6 +9,8 @@ const DESCRIPTIONS = [
   "Perfect!",
 ];
 
+const THROTTLE_TIME_60HZ = 16;
+
 function App($target) {
   this.$layout = document.createElement("div");
   this.$question = document.createElement("p");
@@ -19,7 +21,7 @@ function App($target) {
 
   this.state = {
     rate: 0,
-    edit: true,
+    isSelected: false,
   };
 
   this.setState = (newState) => {
@@ -38,7 +40,7 @@ function App($target) {
 
     this.$rate.innerText = this.state.rate;
 
-    if (!this.state.edit) {
+    if (this.state.isSelected) {
       const descriptionIdx = Math.floor(this.state.rate);
       this.$description.innerText = DESCRIPTIONS[descriptionIdx];
     }
@@ -66,22 +68,23 @@ function App($target) {
     $target.appendChild(this.$layout);
   };
 
-  this.handleClick = () => {
+  this.handleClick = (e) => {
+    if (!e.target.closest(".starBox")) return;
     const newState = {
       ...this.state,
-      edit: !this.state.edit,
+      isSelected: !this.state.isSelected,
     };
     this.setState(newState);
   };
 
   this.handleMousemove = (e) => {
+    if (this.state.isSelected) return;
     if (this.throttle) return;
+
     this.throttle = true;
     setTimeout(() => {
       this.throttle = false;
-      if (!this.state.edit) {
-        return;
-      }
+
       const $curStarWrapper = e.target.closest(".starWrapper");
       if (!$curStarWrapper) return;
 
@@ -101,7 +104,7 @@ function App($target) {
       };
 
       this.setState(newState);
-    }, 16);
+    }, THROTTLE_TIME_60HZ);
   };
 
   this.setEvent = () => {
