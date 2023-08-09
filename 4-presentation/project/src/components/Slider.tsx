@@ -1,4 +1,10 @@
-import { createContext, ReactNode, useContext, useState } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import styled, { css } from 'styled-components';
 import COLORS from '@/constants/colors';
 
@@ -68,6 +74,15 @@ const Slider = ({
   const onTransitionEnd = () => {
     setIsTransitionEnd(true);
   };
+
+  useEffect(() => {
+    if (
+      curPosition[1] > numOfDisplayedSlide - 1 &&
+      numOfTotalSlide - 1 < curPosition[1]
+    ) {
+      moveLeft();
+    }
+  }, [numOfTotalSlide]);
 
   const value = {
     numOfTotalSlide,
