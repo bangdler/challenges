@@ -26,7 +26,11 @@ const ImgAddBtn: React.FC<IProps> = ({ setImgDataList }) => {
 
       setImgDataList(prev => [
         ...prev,
-        { src: reader.result as string, title: file.name },
+        {
+          id: new Date().getTime(),
+          src: reader.result as string,
+          title: file.name,
+        },
       ]);
     };
   };

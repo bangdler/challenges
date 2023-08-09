@@ -13,6 +13,7 @@ import {
 } from '@/constants/slide';
 
 export interface IImgData {
+  id: number;
   src: string;
   title: string;
 }
@@ -72,9 +73,9 @@ function App() {
           <Slider.Button type={ButtonType.LEFT} />
           <Slider.SlidingBox>
             <Wrapper>
-              {imgDataList.map(({ src, title }, idx) => (
+              {imgDataList.map(({ id, src, title }, idx) => (
                 <SmallImg
-                  key={title + idx}
+                  key={id}
                   src={src}
                   title={title}
                   selected={selectedImgIdx === idx}
