@@ -1,0 +1,7 @@
+const SLIDE_IMG_SIZE = 100;
+
+const SLIDE_IMG_GAP = 20;
+
+const DISPLAY_NUMBER = 3;
+
+export { SLIDE_IMG_SIZE, SLIDE_IMG_GAP, DISPLAY_NUMBER };
