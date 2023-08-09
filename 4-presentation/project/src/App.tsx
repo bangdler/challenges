@@ -24,10 +24,35 @@ function App() {
   const viewportWidth = DISPLAY_NUMBER * (SLIDE_IMG_SIZE + SLIDE_IMG_GAP);
   const slideDistance = SLIDE_IMG_SIZE + SLIDE_IMG_GAP;
 
+  const handleClickSmallImg = (idx: number) => () => {
+    setSelectedImgIdx(idx);
+  };
+
+  const handleClickRemoveBtn = () => {
+    setSelectedImgIdx(prev => {
+      if (prev === 0) {
+        return null;
+      }
+      if (prev === imgDataList.length - 1) {
+        return prev - 1;
+      }
+      return prev;
+    });
+    const newImgDataList = [...imgDataList].filter(
+      (_, idx) => idx !== selectedImgIdx,
+    );
+    setImgDataList(newImgDataList);
+  };
+
   return (
     <Layout>
       <Nav>
         <ImgAddBtn setImgDataList={setImgDataList} />
+        {selectedImgIdx !== null && (
+          <ImgRemoveBtn onClick={handleClickRemoveBtn}>
+            선택 사진 삭제
+          </ImgRemoveBtn>
+        )}
       </Nav>
       {selectedImgIdx === null ? (
         <NoImg>선택된 사진이 없습니다.</NoImg>
@@ -53,6 +78,7 @@ function App() {
                   src={src}
                   title={title}
                   selected={selectedImgIdx === idx}
+                  onClick={handleClickSmallImg(idx)}
                 />
               ))}
             </Wrapper>
@@ -70,11 +96,28 @@ const Layout = styled.main`
   min-width: 1200px;
   min-height: 600px;
   padding: 50px 150px;
-  border: 1px solid ${COLORS.darkGray};
+  border-radius: 20px;
+  background-color: ${COLORS.mint};
 `;
 
 const Nav = styled.nav`
+  display: flex;
+  gap: 30px;
   width: 100%;
+`;
+
+const ImgRemoveBtn = styled.button`
+  ${FlexRowCenter};
+  width: 120px;
+  height: 60px;
+  background-color: ${COLORS.red};
+  color: ${COLORS.white};
+  font-size: 1.6rem;
+  border-radius: 5px;
+  cursor: pointer;
+  &:hover {
+    background-color: ${COLORS.darkGray};
+  }
 `;
 
 const NoImg = styled.p`
@@ -85,6 +128,7 @@ const NoImg = styled.p`
   border-radius: 5px;
   font-size: 2.6rem;
   box-shadow: 2px 2px 10px 2px ${COLORS.black};
+  background-color: ${COLORS.white};
 `;
 
 const Box = styled.div`

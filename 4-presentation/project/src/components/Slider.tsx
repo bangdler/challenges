@@ -142,7 +142,7 @@ const Button = styled.button<{ $type: ButtonType }>`
     `;
   }}
   &:disabled {
-    background-color: ${COLORS.gray};
+    background-color: ${COLORS.white};
     cursor: default;
   }
 `;
