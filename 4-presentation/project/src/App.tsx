@@ -30,7 +30,7 @@ function App() {
 
   const handleClickRemoveBtn = () => {
     setSelectedImgIdx(prev => {
-      if (prev === 0) {
+      if (prev === 0 && imgDataList.length === 1) {
         return null;
       }
       if (prev === imgDataList.length - 1) {
@@ -86,6 +86,10 @@ function App() {
           <Slider.Button type={ButtonType.RIGHT} />
         </Box>
       </Slider>
+      <Pagination>
+        {selectedImgIdx !== null && `${selectedImgIdx + 1} /  `}
+        {imgDataList.length}
+      </Pagination>
     </Layout>
   );
 }
@@ -142,6 +146,11 @@ const Wrapper = styled.div`
   flex-shrink: 0;
   min-height: ${SLIDE_IMG_SIZE + SLIDE_IMG_GAP}px;
   padding: calc(${SLIDE_IMG_GAP / 2}px);
+`;
+
+const Pagination = styled.p`
+  font-size: 1.8rem;
+  color: ${COLORS.white};
 `;
 
 export default App;
