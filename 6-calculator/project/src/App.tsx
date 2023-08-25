@@ -1,5 +1,6 @@
 import { FormEventHandler, MouseEventHandler, useState } from 'react';
 import { calculateExpressionUsePostfix } from '@/calculator';
+import { Validator } from '@/validator';
 
 const btnClass =
   'my-0 mx-auto w-[50px] h-[50px] text-xl flex justify-center items-center';
@@ -10,17 +11,26 @@ function App() {
   const [input, setInput] = useState<string>('');
   const [result, setResult] = useState<number>(null);
 
+  const validator = new Validator();
+
   const operators = ['+', '-', '*', '/'];
   const numbers = Array.from({ length: 10 }, (_, idx) => idx);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = e => {
     e.preventDefault();
-    const result = calculateExpressionUsePostfix(input);
-    setResult(result);
+
+    validator.validatorExpression = input;
+    const isValid = validator.validate();
+
+    if (isValid) {
+      const result = calculateExpressionUsePostfix(input);
+      setResult(result);
+    } else {
+      alert('잘못된 수식입니다.');
+    }
   };
 
   const handleClickInputBtn: TInputBtnHandler = str => () => {
-    // input 유효성 검사 필요함.
     setInput(input + str);
   };
 
