@@ -1,27 +1,73 @@
-# React + TypeScript + Vite
+# Challenge 6 - calculator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+### 구현 사항
+- [x] 기본 계산기 기능을 구현한다.
+    - [x] 사칙 연산을 지원한다.
+    - [ ] '+/-' 버튼을 누르면 현재 입력 중인 숫자가 음/양으로 변경된다.
+    - [x] 'A.C' 버튼을 누르면 전부 초기화된다.
+    - [x] 'C' 버튼을 누르면 한글자를 지운다.
+- [ ] 이전 수식들에 대한 이력을 볼 수 있다. (<그림 5> 참고
+- [x] 이전 수식의 계산 결과를 볼 수 있다.
+- [x] 계산할 수 없는 수식(ex. 0으로 나누기)에 대한 처리를 구현한다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 추가 구현 사항
+- [x] 화면을 클릭하면 수식을 직접 입력할 수 있다.
+    - [x] 소괄호를 포함하여 입력할 수 있다.
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### 구현 시간
+- 8시간 이상 걸린 것 같다.
+- tailwind 를 처음 사용해봐서 설정하고 학습하는데 1~2시간을 썼다.
+- jest 를 typescript 환경에서 사용할 수 있도록 설정하느라 시간을 많이 썼다. 삽질을 많이 해서 적게 잡아 2~3시간?
+- 계산기 알고리즘이 생각보다 복잡했다. 연산자의 우선순위, 괄호, - 기호를 음수로 사용하기 등 고려해야할 부분이 많았다.
 
-- Configure the top-level `parserOptions` property like this:
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+### 구현 관련
+- 계산기 로직 구현
+  - 직접 입력한 값을 계산할 수 있다면 버튼으로 입력값을 넣어 계산하는 부분은 크게 문제가 안되겠다고 판단했다.
+  - 처음 시도는 입력값을 split('') 하여 앞에 문자부터 차례대로 순회하며 숫자, 연산자로 구분하여 계산을 했다.
+    - 계산 자체는 잘 되었으나 *,/ 와 +,- 의 우선순위를 구분하지 못하여 실패했다.
+  - 계산기 알고리즘을 찾아보다가 후위표기식으로 바꾸어 계산하는 것을 알게됐다.
+  - 후위표기식은 연산자를 만나면 우선순위에 따라 적절하게 넣어주어 순서대로 계산이 가능한 식으로 변경하는 것.
+- 계산 알고리즘 (후위표기식) 
+  - 2개 함수로 구성
+    - 입력된 수식(올바른 수식)을 후위표기식 배열로 변경한다.
+      ```typescript
+      const changeToPostfixStack = (expression: string): (string | number)[] => {}
+      ```
+    - 후위표기식 배열을 받아 순회하며 계산값을 반환
+      ```typescript
+      const calculatePostFixStack = (stack: (string | number)[]): number => {}
+      ```
+- 추가 고려한 점
+  - `3+--3` 와 같이 다른 연산자 뒤에 - 연산자가 여러개 올 경우 이를 계산할 것인가 고민하다가, 계산하기로 했다.
+  - 위의 식은 `3+3` 같이 계산된다.
+  - 계산식을 바로 eval() 처럼 계산하는 방법도 생각해봤는데, 편법처럼 느껴져서 보류했다.
+    ```typescript
+    const calculateExpression = (expression: string) =>
+      Function(`return ${expression}`)();
+    ```
+- 유효성 검사
+  - 계산 함수는 올바른 수식일 경우에만 동작하므로 유효성 검사가 필요했다.
+  - 8개의 하위 유효성 검사를 통과하면 올바른 수식이다.
+  - 하기 검사로 모든 경우가 다 통과되는지 알 수 없다는 게 함정...?
+    - 빈 문자열 검사
+    - 유효하지 않은 문자열 포함 여부 검사
+    - 첫번째 글자가 유효하지 않은 값인지 검사 (+,* 등)
+    - 마지막 글자가 유효하지 않은 값인지 검사 (-, . 등)
+    - 연산자가 중복으로 있는지 검사 (++, -+ 등)
+    - 올바른 괄호짝인지 검사 ()),((() 등)
+    - 올바른 괄호인지 검사 (2(, )1 등)
+    - 올바른 점인지 검사 (1.1.1, 0..1 등)
+- 테스트 코드
+  - 예전부터 어느 경우에 테스트 코드를 적용하면 좋을까 생각했었는데, 로직 검증이 필요한 이번이 적기라는 생각이 들어서 구현해봤다.
+  - 여러 경우의 수를 테스트 케이스로 만들어 모든 경우의 수를 통과하도록 함수를 구현하니까 오류를 줄일 수 있는 것 같다.
+  - 함수를 수정한 경우, 이전 케이스 통과 여부를 쉽게 검증해 볼 수 있는 점도 좋다.
+    
+  <img width="200" alt="test code image" src="https://github.com/FEChallenge/challenges/assets/90082464/6d8bef3a-c462-48f6-8553-f0611a0972f3">
+  
+#### [후위표기식 참고블로그](https://hini7.tistory.com/146)
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### 데모
+<img src="https://github.com/FEChallenge/challenges/assets/90082464/44d02326-313e-4a40-9eff-9109e6144cde" width="400" alt="데모"/>
