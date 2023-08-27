@@ -10,10 +10,10 @@ type TInputBtnHandler = (str?: string) => MouseEventHandler<HTMLButtonElement>;
 function App() {
   const [input, setInput] = useState<string>('');
   const [result, setResult] = useState<number>(null);
-
+  const [prevAnswer, setPrevAnswer] = useState(0);
   const validator = new Validator();
 
-  const operators = ['+', '-', '*', '/'];
+  const operators = ['+', '-', '*', '/', '^'];
   const numbers = Array.from({ length: 10 }, (_, idx) => idx);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = e => {
@@ -23,7 +23,8 @@ function App() {
 
     if (isValid) {
       const result = calculateExpressionUsePostfix(input);
-      setResult(result);
+      setResult(+result.toFixed(5));
+      setPrevAnswer(+result.toFixed(5));
     } else {
       alert('잘못된 수식입니다.');
     }
@@ -40,6 +41,7 @@ function App() {
 
   const handleClickAllClearBtn: MouseEventHandler<HTMLButtonElement> = () => {
     setInput('');
+    setResult(0);
   };
 
   return (
@@ -94,12 +96,9 @@ function App() {
           <button
             type={'button'}
             className={btnClass}
-            onClick={handleClickInputBtn(String(result))}
+            onClick={handleClickInputBtn(String(prevAnswer))}
           >
             ANS
-          </button>
-          <button type={'submit'} className={btnClass}>
-            =
           </button>
         </div>
         <div className={'w-[100%] grid grid-cols-btn gap-10 m-2'}>
@@ -119,6 +118,9 @@ function App() {
             onClick={handleClickInputBtn('.')}
           >
             •
+          </button>
+          <button type={'submit'} className={btnClass}>
+            =
           </button>
         </div>
       </form>
