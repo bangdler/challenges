@@ -19,8 +19,7 @@ function App() {
   const handleSubmit: FormEventHandler<HTMLFormElement> = e => {
     e.preventDefault();
 
-    validator.validatorExpression = input;
-    const isValid = validator.validate();
+    const isValid = validator.isValidExpression(input);
 
     if (isValid) {
       const result = calculateExpressionUsePostfix(input);
