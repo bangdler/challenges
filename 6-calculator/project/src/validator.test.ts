@@ -14,6 +14,7 @@ describe('Validator 테스트', () => {
     const testFn = validator.hasNotAllowed;
     expect(testFn('1.1')).toBeFalsy();
     expect(testFn('11*(1-2)+2/5')).toBeFalsy();
+    expect(testFn('11*(1-2)+2^5')).toBeFalsy();
     expect(testFn('1+1')).toBeFalsy();
     expect(testFn('1=1')).toBeTruthy();
     expect(testFn('1+as1')).toBeTruthy();
@@ -31,6 +32,7 @@ describe('Validator 테스트', () => {
     expect(testFn('1+/1')).toBeTruthy();
     expect(testFn('1(+1)')).toBeTruthy();
     expect(testFn('(1+1-)')).toBeTruthy();
+    expect(testFn('2^^2')).toBeTruthy();
   });
 
   test('isAllowedFirst 확인', () => {
@@ -44,6 +46,7 @@ describe('Validator 테스트', () => {
     expect(testFn(')1+1-1')).toBeFalsy();
     expect(testFn('.1/1')).toBeFalsy();
     expect(testFn('*1+1')).toBeFalsy();
+    expect(testFn('^1+1')).toBeFalsy();
   });
 
   test('isAllowedLast 확인', () => {
@@ -54,6 +57,7 @@ describe('Validator 테스트', () => {
     expect(testFn('1+1-1(')).toBeFalsy();
     expect(testFn('1/1/')).toBeFalsy();
     expect(testFn('1+1.')).toBeFalsy();
+    expect(testFn('1+2^')).toBeFalsy();
   });
 
   test('isCorrectBracketMate 확인', () => {

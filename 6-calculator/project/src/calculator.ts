@@ -3,6 +3,7 @@ enum Operators {
   minus = '-',
   times = '*',
   obelus = '/',
+  square = '^',
 }
 
 enum Brackets {
@@ -16,12 +17,14 @@ const subtract: TOperatorFn = (a, b) => a - b;
 const sum: TOperatorFn = (a, b) => a + b;
 const multiply: TOperatorFn = (a, b) => a * b;
 const divide: TOperatorFn = (a, b) => a / b;
+const square: TOperatorFn = (a, b) => a ** b;
 
 const operatorFnTable: Record<Operators, TOperatorFn> = {
   [Operators.minus]: subtract,
   [Operators.plus]: sum,
   [Operators.times]: multiply,
   [Operators.obelus]: divide,
+  [Operators.square]: square,
 };
 
 const operatorImportanceTable: Record<Operators & Brackets, number> = {
@@ -29,8 +32,9 @@ const operatorImportanceTable: Record<Operators & Brackets, number> = {
   [Operators.plus]: 1,
   [Operators.times]: 2,
   [Operators.obelus]: 2,
-  [Brackets.frontBracket]: 3,
-  [Brackets.backBracket]: 3,
+  [Operators.square]: 3,
+  [Brackets.frontBracket]: 4,
+  [Brackets.backBracket]: 4,
 };
 
 const isOperator = (str: any) => {

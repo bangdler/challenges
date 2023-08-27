@@ -128,4 +128,14 @@ describe('calculateExpression 함수 테스트', () => {
     expect(testFn('-6/(-9+10)*-6/-1')).toBe(-36);
     expect(testFn('(-6+(-9+10))*(-6+1)/-1')).toBe(-25);
   });
+
+  test('제곱 연산', () => {
+    expect(testFn('2^2*3')).toBe(12);
+    expect(testFn('2*2^3')).toBe(16);
+    expect(testFn('2*2+2^3')).toBe(12);
+    expect(testFn('2*(2+2)^3')).toBe(128);
+    expect(testFn('16*(2+2)^-2')).toBe(1);
+    expect(testFn('((1+1)^(2*2))^2')).toBe(256);
+    expect(testFn('2*2^2/4')).toBe(2);
+  });
 });

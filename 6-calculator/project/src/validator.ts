@@ -4,18 +4,18 @@ export class Validator {
   }
 
   hasNotAllowed(value: string) {
-    const regexp = /[^0-9.+\-*\/()]/g;
+    const regexp = /[^0-9.+\-*\/()^]/g;
     return regexp.test(value);
   }
 
   hasDuplicatedOperator(value: string) {
-    const regexp = /[+\-*\/(][+*\/)]+/g;
+    const regexp = /[+\-*\/(^][+*\/)^]+/g;
     return regexp.test(value);
   }
 
   isAllowedFirst(value: string) {
     const regexp1 = /^[0-9\-(]/; // 숫자, -, ( 로만 시작
-    const regexp2 = /0{2}/; // 00 으로 시작하는 경우
+    const regexp2 = /^0{2}/; // 00 으로 시작하는 경우
     return regexp1.test(value) && !regexp2.test(value);
   }
 
