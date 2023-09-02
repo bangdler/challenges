@@ -32,7 +32,7 @@ describe('changeToPostfixStack 함수 테스트', () => {
       '/',
       '+',
     ]);
-    expect(testFn('-2+3/-2-2')).toEqual([-2, 3, -2, '/', 2, '-', '+']);
+    expect(testFn('-2+3/-2-2')).toEqual([-2, 3, -2, '/', '+', 2, '-']);
     expect(testFn('-1*2-3/4-5/6+7')).toEqual([
       -1,
       2,
@@ -40,13 +40,26 @@ describe('changeToPostfixStack 함수 테스트', () => {
       3,
       4,
       '/',
+      '-',
       5,
       6,
       '/',
+      '-',
       7,
       '+',
+    ]);
+    expect(testFn('1+2*3-4/5+6')).toEqual([
+      1,
+      2,
+      3,
+      '*',
+      '+',
+      4,
+      5,
+      '/',
       '-',
-      '-',
+      6,
+      '+',
     ]);
   });
 
@@ -121,6 +134,7 @@ describe('calculateExpression 함수 테스트', () => {
   test('혼합, 사칙연산', () => {
     expect(testFn('10+2*2/4')).toBe(11);
     expect(testFn('-6/-1+10*-6/-1')).toBe(66);
+    expect(testFn('1+2*3-4/5+6')).toBe(12.2);
   });
 
   test('괄호, 혼합, 사칙연산', () => {

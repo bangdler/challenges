@@ -118,9 +118,14 @@ export const changeToPostfixStack = (
         operatorStack.push(curStr);
       } else {
         const curOperatorImportance = operatorImportanceTable[curStr];
-        const prevOperatorImportance = operatorImportanceTable[prevOperator];
-        if (prevOperatorImportance >= curOperatorImportance) {
-          postFixStack.push(operatorStack.pop());
+
+        for (let i = operatorStack.length - 1; i >= 0; i--) {
+          const prevOperator = operatorStack[i];
+          if (prevOperator === Brackets.frontBracket) break;
+          const prevOperatorImportance = operatorImportanceTable[prevOperator];
+          if (prevOperatorImportance >= curOperatorImportance) {
+            postFixStack.push(operatorStack.pop());
+          }
         }
         operatorStack.push(curStr);
       }
