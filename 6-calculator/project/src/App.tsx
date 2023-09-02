@@ -7,11 +7,12 @@ const btnClass =
 
 type TInputBtnHandler = (str?: string) => MouseEventHandler<HTMLButtonElement>;
 
+const validator = new Validator();
+
 function App() {
   const [input, setInput] = useState<string>('');
   const [result, setResult] = useState<number>(null);
   const [prevAnswer, setPrevAnswer] = useState(0);
-  const validator = new Validator();
 
   const operators = ['+', '-', '*', '/', '^'];
   const numbers = Array.from({ length: 10 }, (_, idx) => idx);

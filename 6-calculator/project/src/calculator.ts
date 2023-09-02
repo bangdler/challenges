@@ -57,7 +57,7 @@ export const changeToPostfixStack = (
   const infixStack = expression.split('');
   infixStack.reverse();
   const operatorStack = [];
-  const postFixStack = [];
+  const postfixStack = [];
   let number = '';
   // 최초 숫자가 음수일 때
   if (infixStack[infixStack.length - 1] === Operators.minus) {
@@ -68,15 +68,15 @@ export const changeToPostfixStack = (
   let minusFlag = false;
 
   // 연산자인 경우 기존 연산자와 현재 연산자의 우선순위를 비교한다.
-  // 기존 연산자의 우선순위가 높거나 같은 경우 기존 연산자를 빼서 postFixStack 에 넣는다.
+  // 기존 연산자의 우선순위가 높거나 같은 경우 기존 연산자를 빼서 postfixStack 에 넣는다.
   // 기존 연산자의 우선순위가 낮을 경우 operatorStack 에 넣는다.
-  // 단 '(' 는 postFixStack 에 넣지 않으며, ')' 를 만나면 operatorStack 의 모든 연산자를 옮긴다.
+  // 단 '(' 는 postfixStack 에 넣지 않으며, ')' 를 만나면 operatorStack 의 모든 연산자를 옮긴다.
   while (infixStack.length) {
     const curStr = infixStack.pop();
 
     if (isBracket(curStr)) {
       if (number !== '') {
-        postFixStack.push(+number);
+        postfixStack.push(+number);
         number = '';
       }
 
@@ -85,7 +85,7 @@ export const changeToPostfixStack = (
         while (operatorStack.length) {
           const prev = operatorStack.pop();
           if (prev !== Brackets.frontBracket) {
-            postFixStack.push(prev);
+            postfixStack.push(prev);
           } else {
             break;
           }
@@ -108,7 +108,7 @@ export const changeToPostfixStack = (
       continuousFlag = true;
 
       if (number !== '') {
-        postFixStack.push(+number);
+        postfixStack.push(+number);
         number = '';
       }
 
@@ -124,7 +124,7 @@ export const changeToPostfixStack = (
           if (prevOperator === Brackets.frontBracket) break;
           const prevOperatorImportance = operatorImportanceTable[prevOperator];
           if (prevOperatorImportance >= curOperatorImportance) {
-            postFixStack.push(operatorStack.pop());
+            postfixStack.push(operatorStack.pop());
           }
         }
         operatorStack.push(curStr);
@@ -143,26 +143,26 @@ export const changeToPostfixStack = (
 
   // 종료 후 남은 숫자와 기호 넣어주기
   if (number !== '') {
-    postFixStack.push(+number);
+    postfixStack.push(+number);
   }
   while (operatorStack.length) {
     const prev = operatorStack.pop();
     if (prev !== Brackets.frontBracket) {
-      postFixStack.push(prev);
+      postfixStack.push(prev);
     } else {
       break;
     }
   }
 
-  return postFixStack;
+  return postfixStack;
 };
 
 // 올바른 후위표기 배열을 받아 계산한다.
-export const calculatePostFixStack = (stack: (string | number)[]): number => {
+const calculatePostfixStack = (stack: (string | number)[]): number => {
   const numberStack = [];
-
+  stack.reverse();
   while (stack.length) {
-    const cur = stack.shift();
+    const cur = stack.pop();
     if (isOperator(cur)) {
       const b = numberStack.pop();
       const a = numberStack.pop();
@@ -179,6 +179,6 @@ export const calculatePostFixStack = (stack: (string | number)[]): number => {
 
 export const calculateExpressionUsePostfix = (expression: string) => {
   const postfixStack = changeToPostfixStack(expression);
-  const result = calculatePostFixStack(postfixStack);
+  const result = calculatePostfixStack(postfixStack);
   return result;
 };
